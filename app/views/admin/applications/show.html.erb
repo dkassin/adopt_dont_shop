@@ -1,0 +1,18 @@
+<h1> Application </h1>
+
+<p>
+
+
+  <% @application.application_pets.each do |pet| %>
+
+    <%= pet.pet.name %>
+
+    <% if pet.approved == "Pending" %>
+    <%= button_to "Approve", "/admin/application_pets/update", method: :patch, params: {:application_id => @application.id, :pet_id => pet.id} %>
+    <% end %>
+
+    <% if pet.approved == "Approved" %>
+    <%= "Approved" %>
+    <% end %>
+  <% end %>
+</p>
