@@ -20,4 +20,16 @@ RSpec.describe 'the admin/shelter index' do
      expect(@shelter_2.name).to appear_before(@shelter_3.name)
      expect(@shelter_3.name).to appear_before(@shelter_1.name)
   end
+
+  it ' It shows all shelters with pending applications' do
+    application = Application.create!(name: 'David',street: '1023 Makeup',city: 'Chicago', state: 'IL', zip: '60657', description: 'Great Person', status: "Pending")
+    application_2 = Application.create!(name: 'Jim', street: '123 Hello St', city: 'Denver', state: 'CO', zip: '80211', description: 'Great Person', status: "Pending")
+    pet_application = ApplicationPet.create!(pet_id: @pet_1.id, application_id: application.id)
+    pet_application_2 = ApplicationPet.create!(pet_id: @pet_3.id, application_id: application_2.id)
+
+     visit "/admin/shelters"
+
+     expect(page).to have_content(@shelter_1.name)
+     expect(page).to have_content(@shelter_3.name)
+  end
 end
