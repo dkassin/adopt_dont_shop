@@ -7,13 +7,7 @@ class ApplicationsController < ApplicationController
     if params[:pet_name].present?
       @pets = Pet.search(params[:pet_name])
     end
-
-    # if params[:description]
-    #   @application.update({description: params[description]})
-    #   @application.save
-    # end
     @application.status_update
-
   end
 
   def new
@@ -33,7 +27,7 @@ class ApplicationsController < ApplicationController
 
   def update
 
-    application = Application.all[0]
+    application = Application.find(params[:app_id])
     application.update(application_params)
 
     redirect_to "/applications/#{application.id}"

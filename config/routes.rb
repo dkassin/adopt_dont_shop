@@ -49,5 +49,5 @@ Rails.application.routes.draw do
 
 
   post '/application_pets/new', to: 'application_pets#create'
-
+  patch '/admin/application_pets', to: 'application_pets#reject'
 end

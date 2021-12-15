@@ -8,11 +8,14 @@
     <%= pet.pet.name %>
 
     <% if pet.approved == "Pending" %>
-    <%= button_to "Approve", "/admin/application_pets/update", method: :patch, params: {:application_id => @application.id, :pet_id => pet.id} %>
+    <%= button_to "Approve", "/admin/application_pets/update", method: :patch, params: {:application_id => @application.id, :pet_id => pet.id, :approved => "Approved"} %>
+    <%= button_to "Rejected", "/admin/application_pets/update", method: :patch, params: {:application_id => @application.id, :pet_id => pet.id, :approved => "Rejected"} %>
     <% end %>
 
     <% if pet.approved == "Approved" %>
     <%= "Approved" %>
+    <% elsif pet.approved == "Rejected" %>
+    <%= "Rejected" %>
     <% end %>
   <% end %>
 </p>
