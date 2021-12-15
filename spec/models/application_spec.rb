@@ -30,8 +30,10 @@ RSpec.describe Application, type: :model do
     expect(@application_2.has_pets?).to eq(false)
   end
 
-  it 'checks to see the status of an application' do
-    expect(@application.in_progress?).to eq(true)
-
+  it 'checks to see if a description has a length more then 1 and updates status to pending' do
+    application_3 = Application.create!(name: 'Jim', street: '123 Hello Street', city: "Denver", state: 'CO', zip: '80211', description: "Test")
+    application_3.status_update
+    expect(application_3.status).to eq("Pending")
+    expect(@application.status).to eq("In Progress")
   end
 end
