@@ -17,7 +17,7 @@ RSpec.describe 'the admin/applications show' do
   it 'has every pet that there is an application for and an approve button' do
     application = Application.create!(name: 'David',street: '1023 Makeup',city: 'Chicago', state: 'IL', zip: '60657', description: 'Great Person', status: "Pending")
     pet_application = ApplicationPet.create!(pet_id: @pet_1.id, application_id: application.id)
-    visit "/admin/applications/#{pet_application.id}"
+    visit "/admin/applications/#{application.id}"
 
     expect(page).to have_content(@pet_1.name)
     expect(page).to have_button("Approve")
@@ -28,13 +28,13 @@ RSpec.describe 'the admin/applications show' do
     application = Application.create!(name: 'David',street: '1023 Makeup',city: 'Chicago', state: 'IL', zip: '60657', description: 'Great Person', status: "Pending")
 
     pet_application = ApplicationPet.create!(pet_id: @pet_1.id, application_id: application.id)
-    visit "/admin/applications/#{pet_application.id}"
+    visit "/admin/applications/#{application.id}"
 
     expect(page).to have_content(@pet_1.name)
     expect(page).to have_button("Approve")
     click_on ("Approve")
 
-    expect(current_path).to eq("/admin/applications/#{pet_application.id}")
+    expect(current_path).to eq("/admin/applications/#{application.id}")
 
     expect(page).to_not have_button("Approve")
     expect(page).to have_content("Approved")
@@ -45,18 +45,34 @@ RSpec.describe 'the admin/applications show' do
     application_2 = Application.create!(name: 'Jim', street: '123 Hello St', city: 'Denver', state: 'CO', zip: '80211', description: 'Great Person', status: "Pending")
     pet_application_2 = ApplicationPet.create!(pet_id: @pet_3.id, application_id: application_2.id)
 
-    visit "/admin/applications/#{pet_application_2.id}"
+    visit "/admin/applications/#{application_2.id}"
 
     expect(page).to have_content(@pet_3.name)
     expect(page).to have_button("Approve")
-    expect(page).to have_button("Reject")
-    click_on ("Reject")
-
-    expect(current_path).to eq("/admin/applications/#{pet_application_2.id}")
-
-    
+    expect(page).to have_button("Rejected")
+    click_button ("Rejected")
+    expect(current_path).to eq("/admin/applications/#{application_2.id}")
     expect(page).to_not have_button("Reject")
     expect(page).to have_content("Rejected")
   end
 
+  it 'Accepting/rejecting one application does not affect the other application' do
+  application = Application.create!(name: 'David',street: '1023 Makeup',city: 'Chicago', state: 'IL', zip: '60657', description: 'Great Person', status: "Pending")
+  pet_application = ApplicationPet.create!(pet_id: @pet_1.id, application_id: application.id)
+  application_2 = Application.create!(name: 'Jim', street: '123 Hello St', city: 'Denver', state: 'CO', zip: '80211', description: 'Great Person', status: "Pending")
+  pet_application_2 = ApplicationPet.create!(pet_id: @pet_1.id, application_id: application_2.id)
+    visit "/admin/applications/#{application.id}"
+    expect(page).to have_content(@pet_1.name)
+    expect(page).to have_button("Approve")
+    click_on ("Approve")
+    expect(current_path).to eq("/admin/applications/#{application.id}")
+
+    visit "/admin/applications/#{application_2.id}"
+    expect(page).to have_button("Approve")
+    expect(page).to have_button("Rejected")
+    click_button ("Rejected")
+    expect(current_path).to eq("/admin/applications/#{application_2.id}")
+    expect(page).to_not have_button("Reject")
+    expect(page).to have_content("Rejected")
+  end
 end
